@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command '$packages = Get-ChildItem \"\"$env:LOCALAPPDATA\\Microsoft\\WinGet\\Packages\\\"\" -Directory | Where-Object {$_.Name -like \"\"*ngrok*\"\"}; if ($packages) { $packages[0].FullName + \"\"\\ngrok.exe\"\" }')",
+      "Bash(\"C:\\Users\\ion\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Ngrok.Ngrok_Microsoft.Winget.Source_8wekyb3d8bbwe\\ngrok.exe\" http 8000 --log=stdout)",
+      "Bash(\"C:\\Users\\ion\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Ngrok.Ngrok_Microsoft.Winget.Source_8wekyb3d8bbwe\\ngrok.exe\" config add-authtoken cr_3643dXZmbqbEwfnxjFbVDzU4ZkR)",
+      "Bash(\"C:\\Users\\ion\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Ngrok.Ngrok_Microsoft.Winget.Source_8wekyb3d8bbwe\\ngrok.exe\" config add-authtoken 3643dXZmbqbEwfnxjFbVDzU4ZkR_4dkYs4snoGUHGvcdgzhJE)",
+      "Bash(python -c:*)",
+      "Bash(winget upgrade:*)",
+      "Bash(\"C:\\Users\\ion\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Ngrok.Ngrok_Microsoft.Winget.Source_8wekyb3d8bbwe\\ngrok.exe\" update)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

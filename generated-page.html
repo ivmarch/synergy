@@ -1,0 +1,948 @@
+<html lang="uk" class="scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СИНЕРГІЯ | Immersive Dome Experience</title>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+        body.loaded {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Custom scrollbar to match the dark theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        /* Smooth fade for elements */
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        
+        /* Smooth zoom animation for visuals images */
+        .smooth-zoom {
+            transition: transform 3s ease-in-out;
+        }
+        .smooth-zoom:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Architecture sphere hover zoom animation */
+        .architecture-sphere-image {
+            transition: transform 3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        .group:hover .architecture-sphere-image {
+            transform: rotate(360deg) scale(1.1) !important;
+        }
+        
+        /* Seamless video loop animation */
+        .video-loop-container {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: visible;
+            clip-path: none;
+        }
+        section.closing-section {
+            overflow: visible !important;
+        }
+        .video-loop {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.1;
+            margin: 0;
+        }
+        .video-loop-primary {
+            left: 2px;
+            top: -117px;
+            transform: scaleY(-1);
+            overflow: visible;
+            clip-path: none;
+            animation: videoPulse 5s ease-in-out infinite;
+        }
+        
+        @keyframes videoPulse {
+            0%, 100% {
+                opacity: 0.1;
+            }
+            50% {
+                opacity: 0.2;
+            }
+        }
+        
+        /* Code slideshow animation - shared for all elements */
+        .code-slideshow {
+            position: relative;
+        }
+        .code-slideshow img {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: scale(1);
+            animation: codeCrossfade 20s infinite linear;
+        }
+        .code-slideshow img:nth-child(1) { animation-delay: 0s; }
+        .code-slideshow img:nth-child(2) { animation-delay: 4s; }
+        .code-slideshow img:nth-child(3) { animation-delay: 8s; }
+        .code-slideshow img:nth-child(4) { animation-delay: 12s; }
+        .code-slideshow img:nth-child(5) { animation-delay: 16s; }
+
+        /* Global offset for each section (0.25s stagger) */
+        .code-slideshow-1 img:nth-child(1) { animation-delay: 0s; }
+        .code-slideshow-1 img:nth-child(2) { animation-delay: 4s; }
+        .code-slideshow-1 img:nth-child(3) { animation-delay: 8s; }
+        .code-slideshow-1 img:nth-child(4) { animation-delay: 12s; }
+        .code-slideshow-1 img:nth-child(5) { animation-delay: 16s; }
+
+        .code-slideshow-2 img:nth-child(1) { animation-delay: 0.25s; }
+        .code-slideshow-2 img:nth-child(2) { animation-delay: 4.25s; }
+        .code-slideshow-2 img:nth-child(3) { animation-delay: 8.25s; }
+        .code-slideshow-2 img:nth-child(4) { animation-delay: 12.25s; }
+        .code-slideshow-2 img:nth-child(5) { animation-delay: 16.25s; }
+
+        .code-slideshow-3 img:nth-child(1) { animation-delay: 0.5s; }
+        .code-slideshow-3 img:nth-child(2) { animation-delay: 4.5s; }
+        .code-slideshow-3 img:nth-child(3) { animation-delay: 8.5s; }
+        .code-slideshow-3 img:nth-child(4) { animation-delay: 12.5s; }
+        .code-slideshow-3 img:nth-child(5) { animation-delay: 16.5s; }
+
+        .code-slideshow-4 img:nth-child(1) { animation-delay: 0.75s; }
+        .code-slideshow-4 img:nth-child(2) { animation-delay: 4.75s; }
+        .code-slideshow-4 img:nth-child(3) { animation-delay: 8.75s; }
+        .code-slideshow-4 img:nth-child(4) { animation-delay: 12.75s; }
+        .code-slideshow-4 img:nth-child(5) { animation-delay: 16.75s; }
+
+        .code-slideshow-5 img:nth-child(1) { animation-delay: 1s; }
+        .code-slideshow-5 img:nth-child(2) { animation-delay: 5s; }
+        .code-slideshow-5 img:nth-child(3) { animation-delay: 9s; }
+        .code-slideshow-5 img:nth-child(4) { animation-delay: 13s; }
+        .code-slideshow-5 img:nth-child(5) { animation-delay: 17s; }
+
+        @keyframes codeCrossfade {
+            0% { opacity: 0; transform: scale(1); }
+            10% { opacity: 1; transform: scale(1.033); }
+            20% { opacity: 1; transform: scale(1.067); }
+            30% { opacity: 0; transform: scale(1.1); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+        
+        /* Grain overlay simulation */
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        
+        /* Custom styles for p.text-base */
+        p.text-base {
+            background-color: unset;
+            background: unset;
+            background-image: none;
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 1);
+            border-width: 0px;
+            border-color: rgba(0, 0, 0, 0);
+            border-style: none;
+            border-image: none;
+            background-clip: unset;
+            -webkit-background-clip: unset;
+            margin-left: 39px !important;
+            margin-right: 39px !important;
+        }
+        
+        /* Custom styles for hero subtitle */
+        p.hero-subtitle {
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 1);
+            border-color: rgba(0, 0, 0, 0);
+            border-style: none;
+            border-image: none;
+            background-clip: unset;
+            -webkit-background-clip: unset;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        /* Custom styles for img.w-full */
+        img.w-full {
+            left: unset !important;
+            top: unset !important;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+            margin-left: 0px !important;
+            margin-right: 0px !important;
+            border-radius: 15px !important;
+            border-top-left-radius: 15px !important;
+            border-top-right-radius: 15px !important;
+            border-bottom-right-radius: 15px !important;
+            border-bottom-left-radius: 15px !important;
+            overflow: visible !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            color: rgba(0, 0, 0, 1) !important;
+        }
+        
+        /* Custom style for img.absolute with Sphere_vibe_02.png */
+        img.absolute[src="img/Sphere_vibe_02.png"] {
+            border-radius: 0px !important;
+        }
+        
+        /* Custom styles for div.max-w-7xl */
+        div.max-w-7xl {
+            border-width: 0px !important;
+            border-color: rgba(0, 0, 0, 0) !important;
+            border-style: none !important;
+            border-image: none !important;
+            font-size: 91px !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Font size overrides for specific elements */
+        p.font-light {
+            font-size: 20px !important;
+        }
+        
+        p.font-light.text-neutral-400 {
+            font-size: 20px !important;
+        }
+        
+        p.text-sm.font-light.leading-relaxed.mb-6.text-neutral-400 {
+            font-size: 20px !important;
+        }
+        
+        div.text-xs.text-neutral-500.font-mono.flex.items-center.gap-2 {
+            font-size: 14px !important;
+        }
+        
+        div.relative.py-8 {
+            font-size: 90px !important;
+        }
+        
+        p.text-neutral-500.mt-2 {
+            font-size: 20px !important;
+        }
+        
+        p.mb-8.font-light.text-neutral-400 {
+            font-size: 20px !important;
+        }
+        
+        /* Custom styles for div.uppercase */
+        div.uppercase {
+            font-size: 10px !important;
+            font-weight: 400 !important;
+            height: 10px !important;
+        }
+        
+        /* Custom styles for div.mt-12 */
+        div.mt-12 {
+            margin-top: 50px !important;
+            margin-bottom: 50px !important;
+            overflow: hidden !important;
+            border-radius: 20px !important;
+            border-top-left-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            border-bottom-right-radius: 20px !important;
+            border-bottom-left-radius: 20px !important;
+        }
+        
+        /* Custom styles for footer.py-8 */
+        footer.py-8 {
+            font-size: 20px !important;
+        }
+    </style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style></head>
+<body class="bg-[#050505] antialiased selection:bg-indigo-500/30 selection:text-indigo-200 text-zinc-300">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b bg-[#050505]/80 backdrop-blur-md border-white/5">
+        <div class="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
+            <div class="text-sm font-semibold tracking-tight uppercase text-white">Синергія</div>
+            <div class="hidden md:flex items-center gap-6 text-xs font-medium text-neutral-500">
+                <a href="#concept" class="transition-colors hover:text-white">Концепція</a>
+                <a href="#elements" class="transition-colors hover:text-white">Стихії</a>
+                <a href="#visuals" class="transition-colors hover:text-white">Референси</a>
+                <a href="#tech" class="transition-colors hover:text-white">Технології</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. HERO -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+        <!-- Sphere Image Background -->
+        <div class="absolute inset-0 z-0">
+            <img src="img/Sphere.png" alt="Sphere" class="w-full h-full object-cover">
+        </div>
+        
+        <!-- Dark Overlay for Text Readability -->
+        <div class="absolute inset-0 z-1 bg-black/40"></div>
+        
+        <!-- Abstract Sphere Glow Background -->
+        <div class="absolute inset-0 z-2 flex items-center justify-center" style="filter: blur(7px); border-width: 1px; border-color: rgba(0, 0, 0, 1);">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover" style="opacity: 0.1; box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);">
+                <source src="img/Logo_loop.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-3xl">
+            <div class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] uppercase tracking-wider mb-8 backdrop-blur-sm border-white/10 bg-white/5 text-neutral-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                ІМЕРСИВНА ІНСТАЛЯЦІЯ
+            </div>
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-semibold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b to-neutral-500 text-white from-white via-white">
+                СИНЕРГІЯ
+            </h1>
+            <p class="text-base md:text-lg font-light leading-relaxed text-neutral-400 hero-subtitle">
+                Переживання п'яти стихій
+            </p>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce text-neutral-600">
+            <span class="text-[10px] uppercase tracking-widest">Scroll</span>
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" data-icon="lucide:arrow-down" data-width="16" data-height="16" stroke-width="1.5" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7l-7 7l-7-7"></path></svg>
+        </div>
+    </section>
+
+    <!-- 2. CONCEPT -->
+    <section id="concept" class="py-24 md:py-32 border-b border-white/5" style="color: rgba(255, 255, 255, 0.28);">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-start">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-medium tracking-tight mb-4 text-white">Концепція</h2>
+                <div class="h-0.5 w-12 bg-indigo-500"></div>
+            </div>
+            <div class="space-y-6 text-base md:text-lg font-light leading-relaxed text-neutral-400">
+                <p class="text-neutral-200">
+                    “СИНЕРГІЯ” — це подорож станами через світло, звук і простір.
+                    Усередині сфери глядач проживає п’ять стихій — від Землі до Синергії.
+                </p>
+                <p>
+                    Це не шоу та не атракціон.
+                    <strong>Це досвід</strong>, який працює з внутрішнім відчуттям.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. ARCHITECTURE -->
+    <section id="architecture" class="py-24 bg-neutral-900/30 relative">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+                <div class="lg:col-span-5 order-2 lg:order-1">
+                    <h2 class="text-2xl md:text-3xl font-medium tracking-tight mb-6 text-white">Архітектура сфери</h2>
+                    <p class="mb-8 font-light text-neutral-400">
+                        Сфера створює автономний та багатофункціональний простір досвіду. Вона існує як об'єкт між природою та технологією.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:move" data-width="18" stroke-width="1.5" class="iconify mt-0.5 text-indigo-400 iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m3-3l-3 3l-3-3M19 9l3 3l-3 3M2 12h20M5 9l-3 3l3 3M9 5l3-3l3 3"></path></svg>
+                            <span class="text-sm text-neutral-300">Мобільна конструкція для відкритих локацій</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:sun" data-width="18" stroke-width="1.5" class="iconify mt-0.5 text-indigo-400 iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></g></svg>
+                            <span class="text-sm text-neutral-300">Гладка, світлова поверхня із м’яким спектральним світінням</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:shield" data-width="18" stroke-width="1.5" class="iconify mt-0.5 text-indigo-400 iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+                            <span class="text-sm text-neutral-300">Вхід закрито ультрафіолетовою мембраною</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-7 order-1 lg:order-2">
+                    <!-- Visual Placeholder for Sphere Render -->
+                    <div class="group relative w-full aspect-[4/3] rounded-3xl overflow-hidden border border-white/10" style="border-color: rgba(254, 22, 234, 0.1); background-color: rgba(5, 5, 5, 1); color: rgba(0, 0, 0, 1);">
+                        <img src="img/Sphere2.png" alt="Sphere" class="architecture-sphere-image absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style="z-index: 12; transform: rotate(360deg) scale(1.0); color: rgba(0, 0, 0, 1); background-color: rgba(99, 102, 241, 0); box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15); left: 20px; top: -25px; position: absolute; z-index: 12;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PORTAL -->
+    <section id="portal" class="py-24 border-y relative overflow-hidden border-white/5">
+        <img id="portal-bg-image" src="img/Sphere2.png" alt="Sphere" class="absolute inset-0 w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] via-[#050505] to-[#050505] from-indigo-900/10" style="left: -17px; top: -26px; filter: blur(7px); border-width: 1px; border-color: rgba(0, 0, 0, 1);"></div>
+        <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+            <span class="inline-block p-3 rounded-full mb-6 bg-white/5 text-indigo-400">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:door-open" data-width="24" stroke-width="1.5" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20H2m9-15.438v16.157a1 1 0 0 0 1.242.97L19 20V5.562a2 2 0 0 0-1.515-1.94l-4-1A2 2 0 0 0 11 4.561zM11 4H8a2 2 0 0 0-2 2v14m8-8h.01M22 20h-3"></path></svg>
+            </span>
+            <h2 class="text-3xl md:text-4xl font-medium tracking-tight mb-6 text-white">Вхід як портал</h2>
+            <p class="text-lg font-light mb-8 text-neutral-300">
+                Вхід у сферу прихований світловою мембраною, що пульсує і реагує на рух.
+                Глядач не бачить, що всередині — він проходить через чистий перехідний простір.
+            </p>
+            <blockquote class="text-xl md:text-2xl font-normal italic opacity-80 text-white">
+                Вхід у Синергію - це момент відриву від зовнішньої логіки
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- 5. INTERIOR -->
+    <section id="interior" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-12">
+                <h2 class="text-2xl md:text-3xl font-medium tracking-tight text-white">Простір усередині</h2>
+                <p class="text-neutral-500 mt-2">Мінімалістична, але виразна сценографія.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-6 rounded-2xl border transition duration-300 bg-neutral-900/50 border-white/5 hover:border-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:columns" data-width="24" stroke-width="1.5" class="iconify mb-4 text-neutral-400 iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M12 3v18"></path></g></svg>
+                    <h3 class="text-sm font-semibold mb-2 text-white">Центральний стовп</h3>
+                    <p class="text-xs text-neutral-500 leading-relaxed">Осьовий елемент конструкції, що тримає структуру.</p>
+                </div>
+                <div class="p-6 rounded-2xl border transition duration-300 bg-neutral-900/50 border-white/5 hover:border-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:circle" data-width="24" stroke-width="1.5" class="iconify mb-4 text-neutral-400 iconify--lucide"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+                    <h3 class="text-sm font-semibold mb-2 text-white">Кільця на підлозі</h3>
+                    <p class="text-xs text-neutral-500 leading-relaxed">Зонування простору для розміщення глядачів.</p>
+                </div>
+                <div class="p-6 rounded-2xl border transition duration-300 bg-neutral-900/50 border-white/5 hover:border-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:orbit" data-width="24" stroke-width="1.5" class="iconify mb-4 text-neutral-400 iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20.341 6.484A10 10 0 0 1 10.266 21.85m-6.607-4.334A10 10 0 0 1 13.74 2.152"></path><circle cx="12" cy="12" r="3"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle></g></svg>
+                    <h3 class="text-sm font-semibold mb-2 text-white">Радіальні лінії</h3>
+                    <p class="text-xs text-neutral-500 leading-relaxed">Світлові напрямні, що створюють глибину.</p>
+                </div>
+                <div class="p-6 rounded-2xl border transition duration-300 bg-neutral-900/50 border-white/5 hover:border-white/20">
+                    <span class="iconify mb-4 text-neutral-400" data-icon="lucide:dome" data-width="24" stroke-width="1.5"></span>
+                    <h3 class="text-sm font-semibold mb-2 text-white">Купольна проекція</h3>
+                    <p class="text-xs text-neutral-500 leading-relaxed">360° візуальне полотно, що охоплює глядача.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. ELEMENTS -->
+    <section id="elements" class="py-24 bg-neutral-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-2xl mb-16">
+                <h2 class="text-3xl font-medium tracking-tight mb-4 text-white">П’ять стихій</h2>
+                <p class="font-light text-neutral-400">
+                    Кожна стихія — це окремий стан, що змінює відчуття простору, світла й звуку.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Earth -->
+                <div class="group relative overflow-hidden rounded-2xl border p-8 transition duration-500 border-white/10 bg-black hover:border-cyan-900/50">
+                    <div class="absolute top-0 right-0 p-30 blur-[60px] rounded-full group-hover:bg-cyan-500/20 transition duration-500 bg-cyan-900/20"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-mono text-cyan-500 mb-2 uppercase tracking-widest">01</div>
+                        <h3 class="text-xl font-medium mb-3 text-white">Земля</h3>
+                        <p class="text-sm font-light leading-relaxed mb-6 text-neutral-400">
+                            Коріння, тектоніка, густе світло. Простір стає щільним і монолітним.
+                        </p>
+                        <div class="h-64 w-full rounded-lg border border-cyan-500/10 overflow-hidden bg-cyan-950/30">
+                            <img src="img/Earth.png" alt="Земля" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Water -->
+                <div class="group relative overflow-hidden rounded-2xl border p-8 transition duration-500 border-white/10 bg-black hover:border-indigo-900/50">
+                    <div class="absolute top-0 right-0 p-30 blur-[60px] rounded-full group-hover:bg-indigo-500/20 transition duration-500 bg-indigo-900/20"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-mono text-indigo-500 mb-2 uppercase tracking-widest">02</div>
+                        <h3 class="text-xl font-medium mb-3 text-white">Вода</h3>
+                        <p class="text-sm font-light leading-relaxed mb-6 text-neutral-400">
+                            Плавність, хвилі, каустики. Форма розчиняється, все переходить у потік.
+                        </p>
+                        <div class="h-64 w-full rounded-lg border border-indigo-500/10 overflow-hidden bg-indigo-950/30">
+                            <img src="img/Water.png" alt="Вода" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fire -->
+                <div class="group relative overflow-hidden rounded-2xl border p-8 transition duration-500 border-white/10 bg-black hover:border-blue-900/50">
+                    <div class="absolute top-0 right-0 p-30 blur-[60px] rounded-full group-hover:bg-blue-500/20 transition duration-500 bg-blue-900/20"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-mono text-blue-500 mb-2 uppercase tracking-widest">03</div>
+                        <h3 class="text-xl font-medium mb-3 text-white">Вогонь</h3>
+                        <p class="text-sm font-light leading-relaxed mb-6 text-neutral-400">
+                            Плазма, жар, напруга. Енергія згущується й прискорює ритм.
+                        </p>
+                        <div class="h-64 w-full rounded-lg border border-blue-500/10 overflow-hidden bg-blue-950/30">
+                            <img src="img/Fire.png" alt="Вогонь" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Air -->
+                <div class="group relative overflow-hidden rounded-2xl border p-8 hover:border-neutral-500/50 transition duration-500 border-white/10 bg-black">
+                    <div class="absolute top-0 right-0 p-30 blur-[60px] rounded-full group-hover:bg-neutral-100/20 transition duration-500 bg-neutral-100/10"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-mono mb-2 uppercase tracking-widest text-neutral-400">04</div>
+                        <h3 class="text-xl font-medium mb-3 text-white">Повітря</h3>
+                        <p class="text-sm font-light leading-relaxed mb-6 text-neutral-400">
+                            Легкість, туман, потоки. Прозорий простір, у якому все дихає.
+                        </p>
+                        <div class="h-64 w-full rounded-lg border border-neutral-500/10 overflow-hidden bg-neutral-900">
+                            <img src="img/AIr.png" alt="Повітря" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Synergy -->
+                <div class="group relative overflow-hidden rounded-2xl border p-8 hover:border-indigo-500/50 transition duration-500 md:col-span-2 lg:col-span-2 border-white/10 bg-black">
+                    <div class="absolute inset-0 bg-gradient-to-br opacity-50 group-hover:opacity-100 transition duration-500 from-indigo-900/20 via-blue-900/10 to-black"></div>
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div>
+                            <div class="text-xs font-mono mb-2 uppercase tracking-widest text-indigo-400">05</div>
+                            <h3 class="text-xl font-medium mb-3 text-white">Синергія</h3>
+                            <p class="text-sm font-light leading-relaxed max-w-md text-neutral-300">
+                                Злиття всього прожитого. Всі стихії переходять у єдину світлову тканину.
+                            </p>
+                        </div>
+                        <div class="mt-8 h-64 w-full rounded-lg border border-indigo-500/10 overflow-hidden bg-indigo-950/30">
+                            <img src="img/Synergy.png" alt="Синергія" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: VISUAL REFERENCES (MOOD BOARD) -->
+    <section id="visuals" class="py-24 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
+                <div class="max-w-xl">
+                    <h2 class="text-3xl font-medium tracking-tight mb-4 text-white">Візуальний код станів</h2>
+                    <p class="font-light text-neutral-400">
+                        Референсна база естетики для кожного з п’яти станів. Форми, текстури та світло, що формують простір.
+                    </p>
+                </div>
+                <div class="text-xs text-neutral-500 font-mono flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:image" data-width="14" stroke-width="1.5" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></g></svg>
+                    Mood Board / Reference
+                </div>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-[300px]">
+                
+                <!-- Earth (Large) -->
+                <div class="md:col-span-2 lg:col-span-2 relative group overflow-hidden rounded-2xl border border-white/5 bg-neutral-900">
+                    <div class="code-slideshow code-slideshow-1 absolute inset-0">
+                        <img src="img/earth_code/earth_code_01.png" alt="Earth 1" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/earth_code/earth_code_02.png" alt="Earth 2" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/earth_code/earth_code_03.png" alt="Earth 3" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/earth_code/earth_code_04.png" alt="Earth 4" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/earth_code/earth_code_05.png" alt="Earth 5" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t to-transparent from-black/90 via-black/20" style="left: -23px; top: -80px;"></div>
+                    <div class="absolute bottom-6 left-6 z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
+                            <span class="text-xs font-mono uppercase tracking-widest text-green-400">01 Земля</span>
+                        </div>
+                        <h3 class="text-xl font-medium text-white">Органічні ландшафти та рельєфи</h3>
+                    </div>
+                </div>
+
+                <!-- Water/Zen (Standard) -->
+                <div class="md:col-span-1 relative group overflow-hidden rounded-2xl border border-white/5 bg-neutral-900">
+                    <div class="code-slideshow code-slideshow-2 absolute inset-0">
+                        <img src="img/water_code/water_code_01.png" alt="Water 1" class="w-full h-full object-cover grayscale-[50%] group-hover:grayscale-0">
+                        <img src="img/water_code/water_code_02.png" alt="Water 2" class="w-full h-full object-cover grayscale-[50%] group-hover:grayscale-0">
+                        <img src="img/water_code/water_code_03.png" alt="Water 3" class="w-full h-full object-cover grayscale-[50%] group-hover:grayscale-0">
+                        <img src="img/water_code/water_code_04.png" alt="Water 4" class="w-full h-full object-cover grayscale-[50%] group-hover:grayscale-0">
+                        <img src="img/water_code/water_code_05.png" alt="Water 5" class="w-full h-full object-cover grayscale-[50%] group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t via-transparent to-transparent from-black/90"></div>
+                    <div class="absolute bottom-6 left-6 z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]"></span>
+                            <span class="text-xs font-mono uppercase tracking-widest text-indigo-400">02 Вода</span>
+                        </div>
+                        <h3 class="text-lg font-medium text-white">Плинність</h3>
+                    </div>
+                </div>
+
+                <!-- Air (Tall - simulating vertical cave from ref) -->
+                <div class="md:col-span-1 md:row-span-2 relative group overflow-hidden rounded-2xl border border-white/5 bg-neutral-900">
+                    <div class="code-slideshow code-slideshow-3 absolute inset-0">
+                        <img src="img/air_code/air_code_01.png" alt="Air Cave 1" class="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-[20%] sepia-[20%]">
+                        <img src="img/air_code/air_code_02.png" alt="Air Cave 2" class="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-[20%] sepia-[20%]">
+                        <img src="img/air_code/air_code_03.png" alt="Air Cave 3" class="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-[20%] sepia-[20%]">
+                        <img src="img/air_code/air_code_04.png" alt="Air Cave 4" class="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-[20%] sepia-[20%]">
+                        <img src="img/air_code/air_code_05.png" alt="Air Cave 5" class="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-[20%] sepia-[20%]">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t via-transparent to-transparent from-black/90"></div>
+                    <div class="absolute bottom-6 left-6 z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full shadow-[0_0_10px_rgba(229,231,235,0.5)] bg-neutral-200"></span>
+                            <span class="text-xs font-mono uppercase tracking-widest text-neutral-200">04 Повітря</span>
+                        </div>
+                        <h3 class="text-lg font-medium text-white">Ефірні форми</h3>
+                    </div>
+                </div>
+
+                <!-- Fire (Standard) -->
+                <div class="md:col-span-1 relative group overflow-hidden rounded-2xl border border-white/5 bg-neutral-900">
+                    <div class="code-slideshow code-slideshow-4 absolute inset-0">
+                        <img src="img/fire_code/fire_code_01.png" alt="Fire 1" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/fire_code/fire_code_02.png" alt="Fire 2" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/fire_code/fire_code_03.png" alt="Fire 3" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/fire_code/fire_code_04.png" alt="Fire 4" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                        <img src="img/fire_code/fire_code_05.png" alt="Fire 5" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t via-transparent to-transparent from-black/90"></div>
+                    <div class="absolute bottom-6 left-6 z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></span>
+                            <span class="text-xs font-mono uppercase tracking-widest text-red-400">03 Вогонь</span>
+                        </div>
+                        <h3 class="text-lg font-medium text-white">Тектонічна енергія</h3>
+                    </div>
+                </div>
+
+                <!-- Synergy (Wide) -->
+                <div class="md:col-span-2 relative group overflow-hidden rounded-2xl border border-white/5 bg-neutral-900">
+                    <div class="code-slideshow code-slideshow-5 absolute inset-0">
+                        <img src="img/synergy_code/synergy_code_01.png" alt="Synergy 1" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0">
+                        <img src="img/synergy_code/synergy_code_02.png" alt="Synergy 2" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0">
+                        <img src="img/synergy_code/synergy_code_03.png" alt="Synergy 3" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0">
+                        <img src="img/synergy_code/synergy_code_04.png" alt="Synergy 4" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0">
+                        <img src="img/synergy_code/synergy_code_05.png" alt="Synergy 5" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-r via-transparent to-transparent from-indigo-950/80"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t via-transparent to-transparent from-black/90"></div>
+                    <div class="absolute bottom-6 left-6 z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.8)]"></span>
+                            <span class="text-xs font-mono uppercase tracking-widest text-indigo-400">05 Синергія</span>
+                        </div>
+                        <h3 class="text-xl font-medium text-white">Портал у безмежність</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. DRAMATURGY -->
+    <section id="dramaturgy" class="py-24 border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="md:w-1/3">
+                    <h2 class="text-2xl font-medium tracking-tight mb-4 text-white">Драматургія досвіду</h2>
+                    <p class="text-sm font-light leading-relaxed mb-6 text-neutral-400">
+                        “Синергія” побудована як безперервний цикл тривалістю 15–20 хвилин.
+                        Інсталяція живе постійно, простір змінюється через колір, інтенсивність світла, фактуру, звук і ритм.
+                    </p>
+                    <div class="text-xs text-neutral-500 font-mono flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:clock" data-width="14" stroke-width="1.5" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 6v6l4 2"></path><circle cx="12" cy="12" r="10"></circle></g></svg>
+                        15-20 min loop
+                    </div>
+                </div>
+                
+                <div class="md:w-2/3 w-full">
+                    <!-- Custom Timeline UI -->
+                    <div class="relative py-8">
+                        <!-- Line -->
+                        <div class="absolute top-1/2 left-0 right-0 h-px -translate-y-1/2 z-0 bg-neutral-800"></div>
+                        <div class="relative z-10 flex justify-between">
+                            <!-- Points -->
+                            <div class="flex flex-col items-center gap-4 group">
+                                <div class="w-3 h-3 rounded-full border group-hover:bg-neutral-400 group-hover:border-neutral-300 transition-colors bg-neutral-400 border-neutral-300"></div>
+                                <span class="text-[10px] uppercase tracking-wider text-neutral-500 group-hover:text-neutral-400 transition-colors">Зародження</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-4 group">
+                                <div class="w-3 h-3 rounded-full border group-hover:bg-green-500 group-hover:border-green-400 transition-colors bg-green-500 border-green-400"></div>
+                                <span class="text-[10px] uppercase tracking-wider text-neutral-500 group-hover:text-green-500 transition-colors">Земля</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-4 group">
+                                <div class="w-3 h-3 rounded-full border group-hover:bg-indigo-500 group-hover:border-indigo-400 transition-colors bg-indigo-500 border-indigo-400"></div>
+                                <span class="text-[10px] uppercase tracking-wider text-neutral-500 group-hover:text-indigo-500 transition-colors">Вода</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-4 group">
+                                <div class="w-3 h-3 rounded-full border group-hover:bg-red-500 group-hover:border-red-400 transition-colors bg-red-500 border-red-400"></div>
+                                <span class="text-[10px] uppercase tracking-wider text-neutral-500 group-hover:text-red-500 transition-colors">Вогонь</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-4 group">
+                                <div class="w-3 h-3 rounded-full border group-hover:bg-neutral-200 group-hover:border-white transition-colors bg-neutral-200 border-white"></div>
+                                <span class="text-[10px] uppercase tracking-wider text-neutral-500 group-hover:text-white transition-colors">Повітря</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-4 group">
+                                <div class="w-4 h-4 rounded-full border-2 border-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)] bg-neutral-900"></div>
+                                <span class="text-[10px] uppercase tracking-wider font-semibold text-indigo-400">Синергія</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stage States Image -->
+            <div class="mt-12 w-full" style="margin-top: 50px; margin-bottom: 50px; overflow: hidden; border-radius: 20px;">
+                <img src="img/Stage_states.png" alt="Stage States" class="w-full h-auto rounded-lg" style="transform: scale(1.05); border-radius: 15px; overflow: visible;">
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. LANDSCAPE -->
+    <section id="landscape" class="py-24">
+        <div class="max-w-7xl mx-auto px-6" style="border-width: 1px; border-color: rgba(0, 0, 0, 1);">
+            <div class="relative overflow-hidden rounded-3xl border border-white/5 bg-neutral-900 h-[400px]">
+                <img src="img/Sphere_vibe_02.png" alt="Landscape" class="absolute inset-0 w-full h-full object-cover opacity-10">
+                
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 z-20 max-w-2xl">
+                        <h2 class="text-2xl md:text-3xl font-medium tracking-tight mb-4 text-white">Сфера в середовищі</h2>
+                    <p class="font-light mb-6 text-neutral-300">
+                        У відкритому просторі сфера працює як об’єкт споглядання. 
+                        Її світіння створює новий акцент у природному середовищі — тихий, гармонійний, гіпнотичний.
+                    </p>
+                    <div class="flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-400">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Вечірня лаунж зона
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. TECH -->
+    <section id="tech" class="py-24 border-y bg-neutral-900/20 border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row gap-12 lg:gap-24">
+                <div class="lg:w-1/3">
+                    <h2 class="text-2xl font-medium tracking-tight mb-4 text-white">Технологічна основа</h2>
+                    <p class="text-neutral-500 text-sm">Технологія тут — не самоціль, а засіб створити цілісний стан.</p>
+                </div>
+                <div class="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-px border rounded-lg overflow-hidden bg-white/10 border-white/10">
+                    <!-- Grid Items (using bg-black to create grid lines) -->
+                    <div class="bg-[#050505] p-6 group transition-colors hover:bg-neutral-900">
+                        <div class="text-xs text-neutral-500 font-mono mb-2">Structure</div>
+                        <div class="text-sm text-neutral-200">Сферична конструкція 11 м</div>
+                    </div>
+                    <div class="bg-[#050505] p-6 group transition-colors hover:bg-neutral-900">
+                        <div class="text-xs text-neutral-500 font-mono mb-2">Visuals</div>
+                        <div class="text-sm text-neutral-200">Проєкції, LED, Генеративна графіка</div>
+                    </div>
+                    <div class="bg-[#050505] p-6 group transition-colors hover:bg-neutral-900">
+                        <div class="text-xs text-neutral-500 font-mono mb-2">Interaction</div>
+                        <div class="text-sm text-neutral-200">Сенсори руху та присутності</div>
+                    </div>
+                    <div class="bg-[#050505] p-6 group transition-colors hover:bg-neutral-900">
+                        <div class="text-xs text-neutral-500 font-mono mb-2">Audio</div>
+                        <div class="text-sm text-neutral-200">Просторовий звук (3D audio)</div>
+                    </div>
+                    <div class="bg-[#050505] p-6 group transition-colors md:col-span-2 hover:bg-neutral-900">
+                        <div class="text-xs text-neutral-500 font-mono mb-2">Logistics</div>
+                        <div class="text-sm text-neutral-200">Модульна структура для монтажу та перевезення</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. CLOSING -->
+    <section class="closing-section py-32 md:py-48 relative overflow-hidden flex items-center justify-center text-center">
+        <!-- Background Glow -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-[30rem] h-[30rem] bg-indigo-500/10 blur-[100px] rounded-full"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-4xl px-6">
+            <div class="mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="48" height="48" viewBox="0 0 24 24" data-icon="lucide:infinity" data-width="48" stroke-width="1.5" class="iconify inline-block text-indigo-400 iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"></path></svg>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-semibold tracking-tighter mb-8 text-white">
+                Синергія як стан
+            </h2>
+            <p class="text-lg md:text-xl font-light leading-relaxed mb-8 max-w-2xl mx-auto text-neutral-300">
+                Синергія - простір, де стихії не конфліктують між собою, а поєднуються. Де форма, світло та звук стають мовою гармонії.
+            </p>
+            <p class="text-sm text-neutral-500 uppercase tracking-widest font-medium">
+                Інтеграція — це стан, у якому все збирається докупи.
+            </p>
+            
+            <!-- Video Loop -->
+            <div class="video-loop-container">
+                <video id="video-loop-primary" class="video-loop video-loop-primary" autoplay muted loop playsinline>
+                    <source src="img/Logo_loop.mp4" type="video/mp4">
+                </video>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-600">
+            <div class="uppercase md:mb-0 tracking-widest mb-4">SINERGY DOME © 2025</div>
+        </div>
+    </footer>
+
+
+    <script>
+        // Wait for all images and videos to load before showing the page
+        (function() {
+            let allLoaded = false;
+            const loadedElements = new Set();
+            
+            function showPage() {
+                if (allLoaded) return;
+                allLoaded = true;
+                
+                // Small delay to ensure everything is rendered
+                setTimeout(function() {
+                    document.body.classList.add('loaded');
+                    
+                    // Start video playback
+                    const videos = document.querySelectorAll('video');
+                    videos.forEach(function(video) {
+                        video.play().catch(function() {
+                            // Auto-play might be blocked, that's okay
+                        });
+                    });
+                }, 200);
+            }
+            
+            function checkAllLoaded() {
+                if (allLoaded) return;
+                
+                const images = document.querySelectorAll('img');
+                const videos = document.querySelectorAll('video');
+                const totalElements = images.length + videos.length;
+                
+                // Check if all elements are loaded
+                if (totalElements === 0) {
+                    showPage();
+                    return;
+                }
+                
+                if (loadedElements.size >= totalElements) {
+                    showPage();
+                }
+            }
+            
+            function markLoaded(element) {
+                if (loadedElements.has(element)) return;
+                loadedElements.add(element);
+                checkAllLoaded();
+            }
+            
+            function initLoader() {
+                const images = document.querySelectorAll('img');
+                const videos = document.querySelectorAll('video');
+                
+                // Handle all images
+                images.forEach(function(img) {
+                    // Create a new Image object to preload
+                    const preloadImg = new Image();
+                    
+                    preloadImg.onload = function() {
+                        markLoaded(img);
+                    };
+                    
+                    preloadImg.onerror = function() {
+                        markLoaded(img); // Count errors as loaded to not block forever
+                    };
+                    
+                    // Use srcset if available, otherwise use src
+                    if (img.srcset) {
+                        preloadImg.srcset = img.srcset;
+                        preloadImg.sizes = img.sizes || '';
+                    }
+                    if (img.src) {
+                        preloadImg.src = img.src;
+                    }
+                    
+                    // Also listen to the original image
+                    if (img.complete) {
+                        markLoaded(img);
+                    } else {
+                        img.addEventListener('load', function() {
+                            markLoaded(img);
+                        }, { once: true });
+                        img.addEventListener('error', function() {
+                            markLoaded(img);
+                        }, { once: true });
+                    }
+                });
+                
+                // Handle all videos - wait for canplaythrough (fully buffered)
+                videos.forEach(function(video) {
+                    // Force video to start loading
+                    video.load();
+                    
+                    if (video.readyState >= 4) { // HAVE_ENOUGH_DATA
+                        markLoaded(video);
+                    } else {
+                        // Wait for canplaythrough - video can play through without stopping
+                        video.addEventListener('canplaythrough', function() {
+                            markLoaded(video);
+                        }, { once: true });
+                        
+                        video.addEventListener('error', function() {
+                            markLoaded(video); // Count errors as loaded
+                        }, { once: true });
+                        
+                        // Also check loadeddata as fallback
+                        video.addEventListener('loadeddata', function() {
+                            // Check again after a delay
+                            setTimeout(function() {
+                                if (video.readyState >= 3) {
+                                    markLoaded(video);
+                                }
+                            }, 500);
+                        }, { once: true });
+                    }
+                });
+                
+                // Initial check
+                checkAllLoaded();
+            }
+            
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(initLoader, 100);
+                });
+            } else {
+                setTimeout(initLoader, 100);
+            }
+            
+            // Also listen for window load event as backup
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const images = document.querySelectorAll('img');
+                    const videos = document.querySelectorAll('video');
+                    let allReady = true;
+                    
+                    images.forEach(function(img) {
+                        if (!img.complete) allReady = false;
+                    });
+                    
+                    videos.forEach(function(video) {
+                        if (video.readyState < 3) allReady = false;
+                    });
+                    
+                    if (allReady) {
+                        showPage();
+                    }
+                }, 500);
+            });
+            
+            // Safety timeout: show page after 15 seconds even if not all loaded
+            setTimeout(function() {
+                if (!allLoaded) {
+                    showPage();
+                }
+            }, 15000);
+        })();
+    </script>
+</body></html>
